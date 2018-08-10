@@ -23,7 +23,7 @@ import OEQ.Utils.Polyfills (polyfill)
 import React (component, unsafeCreateLeafElement)
 import React.DOM (div')
 import Routing.PushState (matchesWith)
-import TSComponents (courseEdit, coursesPage)
+import TSComponents (courseEdit, coursesPage, privilegesPage)
 import Web.HTML (window)
 import Web.HTML.Location (pathname)
 import Web.HTML.Window (location)
@@ -54,6 +54,7 @@ main = do
         effAction = flip runReaderT this
         d = eval >>> effAction
         render {route:Just r} = case r of 
+          PrivilegesPage -> privilegesPage
           SearchPage -> searchPage
           SettingsPage -> settingsPage {legacyMode:false}
           CoursesPage -> coursesPage

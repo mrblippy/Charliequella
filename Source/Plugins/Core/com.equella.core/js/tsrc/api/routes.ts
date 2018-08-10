@@ -1,6 +1,7 @@
 export interface Route {};
 
 export interface Routes {
+    PrivilegesPage: Route,
     CoursesPage: Route,
     SchemasPage: Route,
     NewCourse: Route,

@@ -14,11 +14,15 @@ import React (ReactClass, ReactElement, unsafeCreateLeafElement)
  
 foreign import data Store :: Type
 foreign import store :: Store
+foreign import searchPrivileges :: forall a. ReactClass a
 foreign import searchCourses :: forall a. ReactClass a
 foreign import editCourse :: forall a. ReactClass a
 foreign import appBarQueryClass ::  ReactClass {query :: String, onChange :: EffectFn1 String Unit}
 
 foreign import courseSelectClass :: forall a. ReactClass a
+
+privilegesPage :: ReactElement
+privilegesPage = unsafeCreateLeafElement searchPrivileges {store:store, bridge: tsBridge}
 
 coursesPage :: ReactElement
 coursesPage = unsafeCreateLeafElement searchCourses {store:store, bridge: tsBridge}
