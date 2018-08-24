@@ -1,5 +1,6 @@
 exports.courseString = require("course/SearchCourse").strings;
 exports.courseEditString = require("course/EditCourse").strings;
+exports.privilegeEditString = require("security/EditPrivilege").strings;
 exports.entityStrings = require("entity").entityStrings;
 exports.genStringsDynamic = function(t)
 {

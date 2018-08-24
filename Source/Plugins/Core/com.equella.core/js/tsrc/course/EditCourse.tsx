@@ -1,23 +1,23 @@
-import { Button, FormControl, FormControlLabel, FormGroup, FormHelperText, Grid, Input, Paper, InputLabel, MenuItem, Switch, Tab, Tabs, TextField, Theme } from '@material-ui/core';
+import { Button, FormControl, FormControlLabel, FormGroup, FormHelperText, Grid, Input, InputLabel, MenuItem, Paper, Switch, Tab, Tabs, TextField, Theme } from '@material-ui/core';
 import Select from '@material-ui/core/Select';
 import { StyleRules, WithStyles, withStyles } from '@material-ui/core/styles';
+import { DateTime } from 'luxon';
 //import SwipeableViews from 'react-swipeable-views';
 import { DatePicker } from 'material-ui-pickers';
 import * as React from 'react';
-import { Dispatch, connect } from 'react-redux';
-import courseService from '.';
-import aclService from '../acl/index';
+import { connect, Dispatch } from 'react-redux';
 import { Course } from '../api';
 import { AclEditorChangeEvent, TargetListEntry } from '../api/acleditor';
-import { Error, Loader } from '../components/index';
-import { EditEntityDispatchProps, EditEntityProps, EditEntityStateProps, entityStrings } from '../entity';
-import schemaService from '../schema/index';
+import { Error, Loader } from '../components';
+import MessageInfo from '../components/MessageInfo';
+import aclService from '../service/acl';
+import courseService from '../service/course';
+import { EditEntityDispatchProps, EditEntityProps, EditEntityStateProps, entityStrings } from '../service/entity';
+import schemaService from '../service/schema';
 import { StoreState } from '../store';
 import { commonString } from '../util/commonstrings';
 import { properties } from '../util/dictionary';
 import { prepLangStrings } from '../util/langstrings';
-import MessageInfo from '../components/MessageInfo';
-import { DateTime } from 'luxon';
 
 const styles = (theme: Theme) => {
     //TODO: get drawerWidth passed in somehow
@@ -150,15 +150,15 @@ class EditCourse extends React.Component<Props, EditCourseState> {
             changed: false, 
             justSaved: false,
             errored: false,
-            editing: this.props.uuid ? true : false
+            editing: this.props.id ? true : false
         };
-        if (this.props.uuid)
+        if (this.props.id)
         {
-            this.props.loadEntity(this.props.uuid);
+            this.props.loadObject(this.props.id);
         }
         else 
         {
-            this.props.modifyEntity({
+            this.props.modifyObject({
                 code: '',
                 name: '', 
                 description: '', 
@@ -171,30 +171,30 @@ class EditCourse extends React.Component<Props, EditCourseState> {
     }
 
     modifyEntity = (c: Partial<Course>) => {
-        if (this.props.entity)
+        if (this.props.object)
         {
-            this.props.modifyEntity({...this.props.entity, ...c});
+            this.props.modifyObject({...this.props.object, ...c});
             this.setState({changed:true});
         }
     }
 
     handleSave() {
-        if (this.props.entity)
+        if (this.props.object)
         {
-            const { versionSelection } = this.props.entity;
+            const { versionSelection } = this.props.object;
             const vs = (versionSelection === "DEFAULT" ? undefined : versionSelection);
             
             let course = {
-                ...this.props.entity,
+                ...this.props.object,
                 versionSelection: vs,
-                security: this.state.editSecurity ? {rules: this.state.editSecurity()} : this.props.entity.security
+                security: this.state.editSecurity ? {rules: this.state.editSecurity()} : this.props.object.security
             };
             
-            const { saveEntity } = this.props;
+            const { saveObject } = this.props;
             const thiss = this;
-            this.props.validateEntity(course).then(function(valErrors){
+            this.props.validateObject(course).then(function(valErrors){
                 if (properties(valErrors).length === 0){
-                    saveEntity(course)
+                    saveObject(course)
                     .then(_ => thiss.setState({changed:false, justSaved: true}))
                     .catch(r => thiss.setState({errored: true}))
                 }
@@ -250,12 +250,12 @@ class EditCourse extends React.Component<Props, EditCourseState> {
     }
 
     render() {
-        const { loading, entity, citations, availablePrivileges, classes } = this.props;
+        const { loading, object, citations, availablePrivileges, classes } = this.props;
         const { AclEditor, Template, router, routes } = this.props.bridge;
         const { editing } = this.state;
         const typeval = strings.type;
         const versionval = strings.version;
-        const title = sprintf(editing ? strings.title : strings.newtitle, entity ? entity.name : "");
+        const title = sprintf(editing ? strings.title : strings.newtitle, object ? object.name : "");
 
         if (loading || !citations || !availablePrivileges){
             return <Template title={title} backRoute={routes.CoursesPage}>
@@ -263,14 +263,14 @@ class EditCourse extends React.Component<Props, EditCourseState> {
                 </Template>
         }
 
-        if (!entity){
+        if (!object){
             return <Template title={title} backRoute={routes.CoursesPage}>
                     <Error>Error loading entity</Error>
                 </Template>
         }
 
         const { code, name, description, type, departmentName, citation, students, from, 
-            until, versionSelection, archived, security, validationErrors } = entity;
+            until, versionSelection, archived, security, validationErrors } = object;
         const { activeTab, changed, canSave, justSaved, errored } = this.state;
         const vs = (versionSelection ? versionSelection : "DEFAULT");
         const fromDate = (from ? DateTime.fromISO(from) : null);
@@ -458,7 +458,7 @@ function mapStateToProps(state: StoreState): EditCourseStateProps {
     const { course, schema, acl } = state;
     return {
         loading: course.loading,
-        entity: course.editingEntity,
+        object: course.editingObject,
         citations: schema.citations,
         availablePrivileges: acl.nodes['COURSE_INFO']
     };
@@ -468,12 +468,12 @@ function mapDispatchToProps(dispatch: Dispatch<any>): EditCourseDispatchProps {
     const { workers, actions } = courseService;
     
     return {
-        loadEntity: (uuid: string) => workers.read(dispatch, {uuid}),
-        saveEntity: (entity: Course) => workers.update(dispatch, {entity}),
-        modifyEntity: (entity: Course) => dispatch(actions.modify({entity: entity})),
+        loadObject: (id: string) => workers.read(dispatch, {id}),
+        saveObject: (object: Course) => workers.update(dispatch, {object}),
+        modifyObject: (object: Course) => dispatch(actions.modify({object: object})),
         loadCitations: () => schemaService.workers.citations(dispatch, {}),
         listPrivileges: (node: string) => aclService.workers.listPrivileges(dispatch, {node}),
-        validateEntity: (entity: Course) => workers.validate(dispatch, { entity })
+        validateObject: (object: Course) => workers.validate(dispatch, { object })
     };
 }
 

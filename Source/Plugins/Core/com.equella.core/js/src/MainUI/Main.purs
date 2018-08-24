@@ -23,7 +23,7 @@ import OEQ.Utils.Polyfills (polyfill)
 import React (component, unsafeCreateLeafElement)
 import React.DOM (div')
 import Routing.PushState (matchesWith)
-import TSComponents (courseEdit, coursesPage, privilegesPage)
+import TSComponents (courseEdit, coursesPage, privilegeEdit, privilegesPage)
 import Web.HTML (window)
 import Web.HTML.Location (pathname)
 import Web.HTML.Window (location)
@@ -55,6 +55,7 @@ main = do
         d = eval >>> effAction
         render {route:Just r} = case r of 
           PrivilegesPage -> privilegesPage
+          PrivilegeEdit targetNode -> privilegeEdit $ Just targetNode
           SearchPage -> searchPage
           SettingsPage -> settingsPage {legacyMode:false}
           CoursesPage -> coursesPage

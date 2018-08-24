@@ -35,6 +35,7 @@ function buildBundle(bundle, devpath, dev)
     const psBundle = psTargetDir + bundle;
     console.log("Building " + (dev ? "dev": "production") + " bundle: "+outjs);
 
+    env.NODE_PATH = './target/ts';
     if (dev)
     {
         var pargs = ["--watch", "--before", "sleep 3 && clear", "browserify", "-I", "target/ts", "--to", outjs, "-m", main];
@@ -42,12 +43,9 @@ function buildBundle(bundle, devpath, dev)
         {
             pargs.push("--no-check-main", "--standalone", "PS");
         }
-        env.NODE_PATH = './target/ts';
         spawn.sync("pulp", pargs, {env: env, stdio: 'inherit'})
     }
     else {
-        env.NODE_PATH = './target/ts';
-
         var pargs = ["build", "--to", psBundle, "--skip-entry-point", "-m", main];
 
         var bargs = ["-g", "[", "envify", "--NODE_ENV", "production", "]", "-g", "uglifyify", psBundle, "-"];

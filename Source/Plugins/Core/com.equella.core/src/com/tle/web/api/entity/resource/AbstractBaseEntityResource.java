@@ -123,6 +123,8 @@ public abstract class AbstractBaseEntityResource<BE extends BaseEntity, SB exten
 		}
 
 		securityBean.setRules(entryBeans);
+		securityBean.setEntries(entryBeans);
+
 		return securityBean;
 	}
 

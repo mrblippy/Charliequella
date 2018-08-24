@@ -22,6 +22,7 @@ tsBridge :: Bridge
 tsBridge = {
     routes : unsafeCoerce $ {
         "PrivilegesPage": PrivilegesPage,
+        "PrivilegeEdit": PrivilegeEdit,
         "CoursesPage": CoursesPage, 
         "CourseEdit": CourseEdit, 
         "NewCourse": NewCourse

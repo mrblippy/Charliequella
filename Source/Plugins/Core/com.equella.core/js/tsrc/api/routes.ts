@@ -6,5 +6,6 @@ export interface Routes {
     SchemasPage: Route,
     NewCourse: Route,
     CourseEdit: (uuid?: string) => Route,
+    PrivilegeEdit: (targetNode: string) => Route,
     SchemaEdit: (uuid?: string) => Route
 }
