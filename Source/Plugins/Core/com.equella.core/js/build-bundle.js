@@ -17,13 +17,14 @@ var parser = new ArgumentParser({
 parser.addArgument('module',{ help: 'Module name' } );
 parser.addArgument('out', { help: 'Javascript filename' });
 parser.addArgument('--dev', { help: 'Build dev bundle', action:'storeTrue' });
+parser.addArgument('--dev2', { help: 'Build dev bundle', action:'storeTrue' });
 parser.addArgument('--lib', { help: 'Build as library', action:'storeTrue' });
 parser.addArgument('--devpath', { help: 'Build production bundle to dev path', action:'storeTrue' });
 
 const args =  parser.parseArgs();
 const main = args.module;
 
-function buildBundle(bundle, devpath, dev)
+function buildBundle(bundle, devpath, dev, dev2)
 {
     var destDir = targetDir;
     if (devpath || dev) {
@@ -36,9 +37,23 @@ function buildBundle(bundle, devpath, dev)
     console.log("Building " + (dev ? "dev": "production") + " bundle: "+outjs);
 
     env.NODE_PATH = './target/ts';
-    if (dev)
+    if (dev2)
     {
-        var pargs = ["--watch", "--before", "sleep 3 && clear", "browserify", "-I", "target/ts", "--to", outjs, "-m", main];
+        // Pissing about
+        var pargs = ["build", "-I", "target/ts", "--", "source-maps"];
+        if (args.lib)
+        {
+            pargs.push("--no-check-main", "--standalone", "PS");
+        }
+        const pulp = spawn.sync("pulp", pargs, {env: env, stdio: 'pipe'});
+        const browserify = spawn.sync("browserify", [], {env: env, stdio: 'inherit'});
+        browserify.stdin.pipe(pulp.stdout);
+        const sorcery = spawn.sync("sorcery", [], {env: env, stdio: 'inherit'});
+        sorcery.stdin.pipe(browserify.stdout);
+    }
+    else if (dev)
+    {
+        var pargs = ["--watch", "--before", "sleep 3 && clear", "browserify", "-I", "target/ts", "--to", outjs, "-m", main, "--", "--source-maps"];
         if (args.lib)
         {
             pargs.push("--no-check-main", "--standalone", "PS");
@@ -80,4 +95,4 @@ function buildBundle(bundle, devpath, dev)
     }
 }
 
-buildBundle(args.out, args.devpath, args.dev)
+buildBundle(args.out, args.devpath, args.dev, args.dev2)

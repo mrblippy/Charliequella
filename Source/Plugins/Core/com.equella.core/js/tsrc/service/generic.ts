@@ -37,9 +37,18 @@ export interface EditObjectProps {
 	id: string;
 }
 
+export interface ListObjectProps {
+	bridge: Bridge;
+}
+
 export interface EditObjectStateProps<E> {
     loading?: boolean;
     object: E | undefined;
+}
+
+export interface ListObjectStateProps<E> {
+    loading?: boolean;
+    results: E[] | undefined;
 }
 
 export interface EditObjectDispatchProps<E> {

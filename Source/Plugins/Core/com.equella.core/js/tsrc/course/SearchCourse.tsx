@@ -14,6 +14,7 @@ import { courseService } from '../services';
 import { StoreState } from '../store';
 import { prepLangStrings, sizedString } from '../util/langstrings';
 import VisibilitySensor = require('react-visibility-sensor');
+import { sprintf } from 'sprintf-js';
 
 const styles = (theme: Theme) => ({
     overall: {

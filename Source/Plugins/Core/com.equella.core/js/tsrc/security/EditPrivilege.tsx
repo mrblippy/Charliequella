@@ -13,6 +13,7 @@ import { commonString } from '../util/commonstrings';
 import { formatISO } from '../util/dates';
 import { properties } from '../util/dictionary';
 import { prepLangStrings } from '../util/langstrings';
+import { sprintf } from 'sprintf-js';
 
 
 const styles = (theme: Theme) => {

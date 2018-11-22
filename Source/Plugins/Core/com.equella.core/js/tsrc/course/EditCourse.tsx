@@ -6,6 +6,7 @@ import { DateTime } from 'luxon';
 import { DatePicker } from 'material-ui-pickers';
 import * as React from 'react';
 import { connect, Dispatch } from 'react-redux';
+import { sprintf } from 'sprintf-js';
 import { Course } from '../api';
 import { AclEditorChangeEvent, TargetListEntry } from '../api/acleditor';
 import { Error, Loader } from '../components';
