@@ -286,8 +286,13 @@ select[multiple="multiple"] {
   border-bottom: 1px solid $primaryTextColor;
   font-size: 16px;
   padding: 4px 6px;
+  &:focus {
+    border-bottom: 2px solid $primaryTextColor;
+  }
 }
 .calendar {
+  display: flex;
+  padding-top: 4px;
   img {
     padding-left: 4px;
   }
@@ -645,7 +650,6 @@ Alerts
       color: white;
     }
   }
-
   &.alert-success {
     background-color: #43a047;
   }
@@ -1189,7 +1193,8 @@ ul.ui-autocomplete {
 }
 
 #actionbuttons button.filtered {
-  background-color: #faa732;
+  background-color: $secondaryColor;
+  color: set-text-color($secondaryColor);
 }
 
 #actioncontent.resulttopblock {
@@ -1206,6 +1211,24 @@ ul.ui-autocomplete {
     background-color: transparent;
     color: set-text-color($primaryColor);
     margin-left: 3px;
+    .icon-user:before {
+      content: "\e7fd";
+      font-family: "Material Icons";
+      font-size: 24px;
+      color: set-text-color($primaryColor);
+      padding-right: 4px;
+      font-style: normal;
+      vertical-align: middle;
+    }
+    .icon-remove:before {
+      content: "\e5cd";
+      font-family: "Material Icons";
+      font-size: 24px;
+      color: set-text-color($primaryColor);
+      padding-right: 4px;
+      font-style: normal;
+      vertical-align: middle;
+    }
     &:hover {
       background-color: transparentize(set-text-color($primaryColor), 0.7);
     }
@@ -1243,8 +1266,8 @@ ul.ui-autocomplete {
 }
 
 #searchresults-actions #actioncontent p {
-  font-size: 11px;
-  line-height: 14px;
+  @include typography-subtitle-2;
+  color: set-text-color($primaryColor);
   margin: 10px 0;
 }
 
@@ -1260,6 +1283,12 @@ ul.ui-autocomplete {
 #searchresults-actions #actioncontent div.input.select select {
   margin: 0 4px 0 0;
   width: 300px;
+}
+
+#searchresults-select,
+.searchresults-infobar {
+  @include typography-subtitle-1;
+  margin: 8px 8px;
 }
 
 .icon-envelope:before {
@@ -1488,130 +1517,4 @@ html.wait {
     list-style-type: none;
     text-transform: capitalize;
   }
-}
-
-//itemsummary.css
-.itemsummary-layout {
-  width: 750px;
-}
-
-.itemsummary-layout #col1 {
-  width: 592px;
-}
-
-.itemsummary-layout #col2 {
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
-}
-
-.itemsummary-layout #col1 .area td > h3 {
-  margin-top: 0px;
-}
-
-.itemsummary-layout #col1 .area td > p {
-  margin-bottom: 10px;
-}
-
-.itemsummary-layout #col2 h3 {
-  font-size: 14px;
-  font-weight: normal;
-}
-
-.itemsummary-layout #col2 ul {
-  margin: 10px 0px;
-}
-
-/* keeps li spacing even when one list follows another in the same section */
-.itemsummary-layout #adjacentuls ul {
-  margin: 5px 0px;
-}
-
-.itemsummary-layout #adjacentuls ul li {
-  margin: 5px 0px;
-}
-
-.itemsummary-layout #adjacentuls .prop {
-  clear: both;
-}
-
-.itemsummary-layout #col2 ul li {
-  line-height: 1.3;
-  margin: 4px 0px;
-}
-
-.itemsummary-layout #col2 ul li a {
-  color: #045f7f;
-}
-
-.itemsummary-layout .box {
-  width: 137px;
-}
-
-.itemsummary-layout #col1 ul.moderators {
-  list-style: disc;
-  margin-top: 4px;
-  padding-left: 2.5em;
-  padding-right: 2.5em;
-}
-
-.itemsummary-layout #col1 div.flowchart-thumb {
-  margin-top: 15px;
-  text-align: center;
-}
-
-.itemsummary-layout #col1 div.flowchart-thumb img {
-  border: 1px solid #8f8b7f;
-  max-width: 522px;
-}
-
-.itemsummary-layout #col1 #historyevents {
-  margin: 10px 0;
-}
-
-.itemsummary-layout #col1 .displayNodeHalf {
-  display: inline-block;
-  vertical-align: top;
-  margin: -15px 0;
-  width: 49%;
-}
-
-.action-button.select {
-  background-image: url("../images/addselected.ltr.png");
-}
-
-.action-button.unselect {
-  background-image: url("../images/removeselected.ltr.png");
-}
-
-.itemdetails {
-  padding-top: 8px;
-}
-
-div.in-selection .itemdetails-left {
-  float: left;
-}
-
-div.in-selection ul.itemdetails-right {
-  float: right;
-}
-
-div.action_list {
-  margin-top: 110px;
-}
-
-.htmlcontent {
-  word-wrap: break-word;
-  white-space: normal;
-  overflow: auto;
-  overflow-y: hidden;
-}
-
-/**
-	Versions table
-**/
-table.versions {
-  table-layout: fixed;
-}
-
-table.versions td {
-  word-wrap: break-word;
 }
