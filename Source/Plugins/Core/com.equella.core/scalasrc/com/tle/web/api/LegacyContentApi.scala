@@ -440,7 +440,7 @@ class LegacyContentApi {
         info.preventGET()
         info.getRootRenderContext.setRootResultListener(new LegacyResponseListener(info))
         LegacyContentController.execute(info)
-        redirectResponse(info)
+        val r = redirectResponse(info)
           .orElse(renderedResponse(info))
           .orElse(Option(info.getAttributeForClass(classOf[AjaxRenderContext])).map(arc =>
             ajaxResponse(info, arc)))
@@ -448,6 +448,7 @@ class LegacyContentApi {
             info.setRendered()
             Response.ok(req.getAttribute(LegacyContentKey))
           }
+        r
       }
     )
   }

@@ -336,7 +336,11 @@ public class CanvasIntegration extends AbstractIntegrationService<CanvasSessionD
         String lti_message_type = data.getLtiMessageType();
         if (lti_message_type != null
             && lti_message_type.equalsIgnoreCase(CONTENT_ITEM_SELECTION_REQUEST)) {
-          info.forward(info.createForward("/canvascipreturn.do"));
+          info.forceRedirect();
+          String urlMnagled =
+              info.createForward("/canvascipreturn.do").getPublicBookmark().getHref();
+          System.out.println(urlMnagled);
+          info.forwardToUrl(urlMnagled);
         } else {
           final SelectedResource resource = getFirstSelectedResource(session);
           final IItem<?> item = getItemForResource(resource);

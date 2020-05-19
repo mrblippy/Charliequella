@@ -139,7 +139,7 @@ public class SelectionServiceImpl extends AbstractModalSessionServiceImpl<Select
       return;
     }
     info.setAttribute(RESULTS_RETURNED, true);
-
+    info.forceRedirect();
     boolean maintainSelections = false;
     SelectionsMadeCallback callback = session.getSelectionsMadeCallback();
     if (callback != null) {
